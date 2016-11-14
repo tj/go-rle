@@ -45,7 +45,7 @@ func Int64Values(buffer []byte) (v []int64, err error) {
 		return nil, nil
 	}
 
-	var buf = bytes.NewBuffer(buffer)
+	buf := bytes.NewBuffer(buffer)
 
 	for {
 		num, err := binary.ReadVarint(buf)
@@ -81,8 +81,7 @@ func Int64Card(buffer []byte) (v map[int64]uint64, err error) {
 	}
 
 	v = make(map[int64]uint64)
-
-	var buf = bytes.NewBuffer(buffer)
+	buf := bytes.NewBuffer(buffer)
 
 	for {
 		num, err := binary.ReadVarint(buf)
