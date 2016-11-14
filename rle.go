@@ -75,16 +75,16 @@ func Int64Values(buffer []byte) (v []int64, err error) {
 }
 
 // Int64Card returns a map of value cardinality.
-func Int64Card(buffer []byte) (v map[int64]uint64, err error) {
-	if len(buffer) == 0 {
+func Int64Card(buf []byte) (v map[int64]uint64, err error) {
+	if len(buf) == 0 {
 		return nil, nil
 	}
 
 	v = make(map[int64]uint64)
-	buf := bytes.NewBuffer(buffer)
+	r := bytes.NewBuffer(buf)
 
 	for {
-		num, err := binary.ReadVarint(buf)
+		num, err := binary.ReadVarint(r)
 		if err == io.EOF {
 			break
 		}
@@ -93,7 +93,7 @@ func Int64Card(buffer []byte) (v map[int64]uint64, err error) {
 			return nil, err
 		}
 
-		run, err := binary.ReadVarint(buf)
+		run, err := binary.ReadVarint(r)
 		if err == io.EOF {
 			return nil, io.ErrUnexpectedEOF
 		}
