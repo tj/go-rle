@@ -73,3 +73,38 @@ func ParseInt64(buffer []byte) (v []int64, err error) {
 
 	return v, nil
 }
+
+// Int64Card returns a map of value cardinality.
+func Int64Card(buffer []byte) (v map[int64]uint64, err error) {
+	if len(buffer) == 0 {
+		return nil, nil
+	}
+
+	v = make(map[int64]uint64)
+
+	var buf = bytes.NewBuffer(buffer)
+
+	for {
+		num, err := binary.ReadVarint(buf)
+		if err == io.EOF {
+			break
+		}
+
+		if err != nil {
+			return nil, err
+		}
+
+		run, err := binary.ReadVarint(buf)
+		if err == io.EOF {
+			break
+		}
+
+		if err != nil {
+			return nil, err
+		}
+
+		v[num] += uint64(run)
+	}
+
+	return v, nil
+}

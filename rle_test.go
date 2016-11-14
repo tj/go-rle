@@ -34,6 +34,16 @@ func TestInt64(t *testing.T) {
 	}
 }
 
+func TestInt64Cardinality(t *testing.T) {
+	{
+		nums := []int64{1, 1, 1, 1, 1, 1, 0, 0, 0, 2}
+		b := rle.Int64(nums)
+		v, err := rle.Int64Card(b)
+		assert.NoError(t, err)
+		assert.Equal(t, map[int64]uint64{1: 6, 0: 3, 2: 1}, v)
+	}
+}
+
 func BenchmarkInt64(b *testing.B) {
 	nums := []int64{1, 1, 1, 0, 0, 0, 0, 0, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2}
 	for i := 0; i < b.N; i++ {
