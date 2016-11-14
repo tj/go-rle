@@ -11,7 +11,7 @@ func TestInt64(t *testing.T) {
 	{
 		var nums []int64
 		b := rle.Int64(nums)
-		v, err := rle.ParseInt64(b)
+		v, err := rle.Int64Values(b)
 		assert.NoError(t, err)
 		assert.Equal(t, nums, v)
 	}
@@ -19,7 +19,7 @@ func TestInt64(t *testing.T) {
 	{
 		nums := []int64{1, 1, 1, 0, 0, 0, 0, 0, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2}
 		b := rle.Int64(nums)
-		v, err := rle.ParseInt64(b)
+		v, err := rle.Int64Values(b)
 		assert.NoError(t, err)
 		assert.Equal(t, nums, v)
 	}
@@ -27,7 +27,7 @@ func TestInt64(t *testing.T) {
 	{
 		nums := []int64{1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1}
 		b := rle.Int64(nums)
-		v, err := rle.ParseInt64(b)
+		v, err := rle.Int64Values(b)
 		assert.NoError(t, err)
 		assert.Equal(t, 2, len(b), "should be two bytes")
 		assert.Equal(t, nums, v)
@@ -51,11 +51,11 @@ func BenchmarkInt64(b *testing.B) {
 	}
 }
 
-func BenchmarkParseInt64(b *testing.B) {
+func BenchmarkInt64Values(b *testing.B) {
 	nums := []int64{1, 1, 1, 0, 0, 0, 0, 0, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2}
 	buf := rle.Int64(nums)
 	for i := 0; i < b.N; i++ {
-		rle.ParseInt64(buf)
+		rle.Int64Values(buf)
 	}
 }
 

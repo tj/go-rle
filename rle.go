@@ -39,8 +39,8 @@ func Int64(nums []int64) []byte {
 	return buf.Bytes()
 }
 
-// ParseInt64 encoded run.
-func ParseInt64(buffer []byte) (v []int64, err error) {
+// Int64Values encoded run.
+func Int64Values(buffer []byte) (v []int64, err error) {
 	if len(buffer) == 0 {
 		return nil, nil
 	}
