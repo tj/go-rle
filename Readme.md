@@ -6,8 +6,7 @@ for example a log severity enum is an especially good use-case as most logs are 
 
 ## Badges
 
-[![Build Status](https://semaphoreci.com/api/v1/tj/apex/branches/master/badge.svg)](https://semaphoreci.com/tj/apex)
-[![GoDoc](https://godoc.org/github.com/?status.svg)](https://godoc.org/github.com/)
+[![GoDoc](https://godoc.org/github.com/tj/go-rle?status.svg)](https://godoc.org/github.com/tj/go-rle)
 ![](https://img.shields.io/badge/license-MIT-blue.svg)
 ![](https://img.shields.io/badge/status-stable-green.svg)
 [![](http://apex.sh/images/badge.svg)](https://apex.sh/)
