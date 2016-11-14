@@ -59,7 +59,7 @@ func Int64Values(buffer []byte) (v []int64, err error) {
 
 		run, err := binary.ReadVarint(buf)
 		if err == io.EOF {
-			break
+			return nil, io.ErrUnexpectedEOF
 		}
 
 		if err != nil {
@@ -95,7 +95,7 @@ func Int64Card(buffer []byte) (v map[int64]uint64, err error) {
 
 		run, err := binary.ReadVarint(buf)
 		if err == io.EOF {
-			break
+			return nil, io.ErrUnexpectedEOF
 		}
 
 		if err != nil {
