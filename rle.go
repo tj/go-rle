@@ -7,6 +7,53 @@ import (
 	"io"
 )
 
+// Int64Scanner is what it sounds like.
+type Int64Scanner struct {
+	Value int64
+	Run   int64
+	buf   *bytes.Buffer
+	err   error
+}
+
+// Next returns true if a value was scanned.
+func (s *Int64Scanner) Next() bool {
+	if s.Run > 1 {
+		s.Run--
+		return true
+	}
+
+	num, err := binary.ReadVarint(s.buf)
+	if err == io.EOF {
+		return false
+	}
+
+	if err != nil {
+		s.err = err
+		return false
+	}
+
+	run, err := binary.ReadVarint(s.buf)
+	if err == io.EOF {
+		s.err = io.ErrUnexpectedEOF
+		return false
+	}
+
+	if err != nil {
+		s.err = err
+		return false
+	}
+
+	s.Value = num
+	s.Run = run
+
+	return true
+}
+
+// Err returns any error which ocurred during scanning.
+func (s *Int64Scanner) Err() error {
+	return s.err
+}
+
 // Int64 encoded run.
 func Int64(nums []int64) []byte {
 	if len(nums) == 0 {
@@ -37,6 +84,13 @@ func Int64(nums []int64) []byte {
 	buf.Write(b[:n])
 
 	return buf.Bytes()
+}
+
+// ScanInt64 returns an int64 scanner.
+func ScanInt64(buf []byte) *Int64Scanner {
+	return &Int64Scanner{
+		buf: bytes.NewBuffer(buf),
+	}
 }
 
 // Int64Values encoded run.

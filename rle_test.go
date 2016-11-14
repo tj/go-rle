@@ -34,6 +34,20 @@ func TestInt64(t *testing.T) {
 	}
 }
 
+func TestScanInt64(t *testing.T) {
+	in := []int64{0, 0, 0, 0, 0, 3, 3, 4, 1, 1, 1}
+	out := []int64{}
+
+	s := rle.ScanInt64(rle.Int64(in))
+
+	for s.Next() {
+		out = append(out, s.Value)
+	}
+
+	assert.Equal(t, in, out)
+	assert.NoError(t, s.Err())
+}
+
 func TestInt64Cardinality(t *testing.T) {
 	nums := []int64{1, 1, 1, 1, 1, 1, 0, 0, 0, 2}
 	b := rle.Int64(nums)
@@ -92,6 +106,42 @@ func BenchmarkInt64Values(b *testing.B) {
 		b.SetBytes(1e6)
 		for i := 0; i < b.N; i++ {
 			rle.Int64Values(nums1000)
+		}
+	})
+}
+
+func BenchmarkScanInt64(b *testing.B) {
+	nums100 := rle.Int64(make([]int64, 100e3))
+	nums500 := rle.Int64(make([]int64, 500e3))
+	nums1000 := rle.Int64(make([]int64, 1e6))
+
+	b.Run("100k", func(b *testing.B) {
+		b.SetBytes(100e3)
+		for i := 0; i < b.N; i++ {
+			s := rle.ScanInt64(nums100)
+			for s.Next() {
+
+			}
+		}
+	})
+
+	b.Run("500k", func(b *testing.B) {
+		b.SetBytes(500e3)
+		for i := 0; i < b.N; i++ {
+			s := rle.ScanInt64(nums500)
+			for s.Next() {
+
+			}
+		}
+	})
+
+	b.Run("1M", func(b *testing.B) {
+		b.SetBytes(1e6)
+		for i := 0; i < b.N; i++ {
+			s := rle.ScanInt64(nums1000)
+			for s.Next() {
+
+			}
 		}
 	})
 }
