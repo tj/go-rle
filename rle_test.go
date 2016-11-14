@@ -48,18 +48,21 @@ func BenchmarkInt64(b *testing.B) {
 	nums1000 := make([]int64, 1e6)
 
 	b.Run("100k", func(b *testing.B) {
+		b.SetBytes(100e3)
 		for i := 0; i < b.N; i++ {
 			rle.Int64(nums100)
 		}
 	})
 
 	b.Run("500k", func(b *testing.B) {
+		b.SetBytes(500e3)
 		for i := 0; i < b.N; i++ {
 			rle.Int64(nums500)
 		}
 	})
 
 	b.Run("1M", func(b *testing.B) {
+		b.SetBytes(1e6)
 		for i := 0; i < b.N; i++ {
 			rle.Int64(nums1000)
 		}
@@ -72,18 +75,21 @@ func BenchmarkInt64Values(b *testing.B) {
 	nums1000 := rle.Int64(make([]int64, 1e6))
 
 	b.Run("100k", func(b *testing.B) {
+		b.SetBytes(100e3)
 		for i := 0; i < b.N; i++ {
 			rle.Int64Values(nums100)
 		}
 	})
 
 	b.Run("500k", func(b *testing.B) {
+		b.SetBytes(500e3)
 		for i := 0; i < b.N; i++ {
 			rle.Int64Values(nums500)
 		}
 	})
 
 	b.Run("1M", func(b *testing.B) {
+		b.SetBytes(1e6)
 		for i := 0; i < b.N; i++ {
 			rle.Int64Values(nums1000)
 		}
