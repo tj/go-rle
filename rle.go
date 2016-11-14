@@ -86,78 +86,32 @@ func Int64(nums []int64) []byte {
 	return buf.Bytes()
 }
 
-// ScanInt64 returns an int64 scanner.
-func ScanInt64(buf []byte) *Int64Scanner {
+// Int64Scan returns an int64 scanner.
+func Int64Scan(buf []byte) *Int64Scanner {
 	return &Int64Scanner{
 		buf: bytes.NewBuffer(buf),
 	}
 }
 
 // Int64Values encoded run.
-func Int64Values(buffer []byte) (v []int64, err error) {
-	if len(buffer) == 0 {
-		return nil, nil
+func Int64Values(buf []byte) (v []int64, err error) {
+	s := Int64Scan(buf)
+
+	for s.Next() {
+		v = append(v, s.Value)
 	}
 
-	buf := bytes.NewBuffer(buffer)
-
-	for {
-		num, err := binary.ReadVarint(buf)
-		if err == io.EOF {
-			break
-		}
-
-		if err != nil {
-			return nil, err
-		}
-
-		run, err := binary.ReadVarint(buf)
-		if err == io.EOF {
-			return nil, io.ErrUnexpectedEOF
-		}
-
-		if err != nil {
-			return nil, err
-		}
-
-		for i := 0; i < int(run); i++ {
-			v = append(v, num)
-		}
-	}
-
-	return v, nil
+	return v, s.Err()
 }
 
 // Int64Card returns a map of value cardinality.
 func Int64Card(buf []byte) (v map[int64]uint64, err error) {
-	if len(buf) == 0 {
-		return nil, nil
-	}
-
+	s := Int64Scan(buf)
 	v = make(map[int64]uint64)
-	r := bytes.NewBuffer(buf)
 
-	for {
-		num, err := binary.ReadVarint(r)
-		if err == io.EOF {
-			break
-		}
-
-		if err != nil {
-			return nil, err
-		}
-
-		run, err := binary.ReadVarint(r)
-		if err == io.EOF {
-			return nil, io.ErrUnexpectedEOF
-		}
-
-		if err != nil {
-			return nil, err
-		}
-
-		v[num] += uint64(run)
+	for s.Next() {
+		v[s.Value]++
 	}
 
-	return v, nil
+	return v, s.Err()
 }
