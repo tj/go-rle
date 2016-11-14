@@ -58,3 +58,11 @@ func BenchmarkParseInt64(b *testing.B) {
 		rle.ParseInt64(buf)
 	}
 }
+
+func BenchmarkInt64Card(b *testing.B) {
+	nums := []int64{1, 1, 1, 0, 0, 0, 0, 0, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2}
+	buf := rle.Int64(nums)
+	for i := 0; i < b.N; i++ {
+		rle.Int64Card(buf)
+	}
+}
