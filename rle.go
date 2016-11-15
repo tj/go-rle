@@ -56,7 +56,9 @@ func (s *Int64Scanner) Err() error {
 
 // Int64 encoded run.
 func Int64(nums []int64) []byte {
-	if len(nums) == 0 {
+	size := len(nums)
+
+	if size == 0 {
 		return nil
 	}
 
@@ -65,7 +67,9 @@ func Int64(nums []int64) []byte {
 	var cur = nums[0]
 	var run int64
 
-	for _, num := range nums {
+	for i := 0; i < size; i++ {
+		num := nums[i]
+
 		if num != cur {
 			n := binary.PutVarint(b, cur)
 			buf.Write(b[:n])
