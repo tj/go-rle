@@ -7,7 +7,7 @@ import (
 )
 
 func Example() {
-	b := rle.Int64([]int64{1, 1, 1, 1, 1, 1, 1, 1, 125, 1, 1, 1, 1, 1, 1, 1, 1})
+	b := rle.EncodeInt64([]int64{1, 1, 1, 1, 1, 1, 1, 1, 125, 1, 1, 1, 1, 1, 1, 1, 1})
 	fmt.Printf("buf: %#x\n", b)
 	fmt.Printf("len: %v\n", len(b))
 	// Output:

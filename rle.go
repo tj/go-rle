@@ -7,55 +7,62 @@ import (
 	"io"
 )
 
-// Int64Scanner is what it sounds like.
-type Int64Scanner struct {
+// Int64Decoder is what it sounds like.
+type Int64Decoder struct {
 	Value int64
 	Run   int64
 	buf   *bytes.Buffer
 	err   error
 }
 
+// NewInt64Decoder returns an int64 decoder.
+func NewInt64Decoder(buf []byte) *Int64Decoder {
+	return &Int64Decoder{
+		buf: bytes.NewBuffer(buf),
+	}
+}
+
 // Next returns true if a value was scanned.
-func (s *Int64Scanner) Next() bool {
-	if s.Run > 1 {
-		s.Run--
+func (d *Int64Decoder) Next() bool {
+	if d.Run > 1 {
+		d.Run--
 		return true
 	}
 
-	num, err := binary.ReadVarint(s.buf)
+	num, err := binary.ReadVarint(d.buf)
 	if err == io.EOF {
 		return false
 	}
 
 	if err != nil {
-		s.err = err
+		d.err = err
 		return false
 	}
 
-	run, err := binary.ReadVarint(s.buf)
+	run, err := binary.ReadVarint(d.buf)
 	if err == io.EOF {
-		s.err = io.ErrUnexpectedEOF
+		d.err = io.ErrUnexpectedEOF
 		return false
 	}
 
 	if err != nil {
-		s.err = err
+		d.err = err
 		return false
 	}
 
-	s.Value = num
-	s.Run = run
+	d.Value = num
+	d.Run = run
 
 	return true
 }
 
-// Err returns any error which ocurred during scanning.
-func (s *Int64Scanner) Err() error {
-	return s.err
+// Err returns any error which ocurred during decoding.
+func (d *Int64Decoder) Err() error {
+	return d.err
 }
 
-// Int64 encoded run.
-func Int64(nums []int64) []byte {
+// EncodeInt64 encoded run.
+func EncodeInt64(nums []int64) []byte {
 	size := len(nums)
 
 	if size == 0 {
@@ -90,16 +97,9 @@ func Int64(nums []int64) []byte {
 	return buf.Bytes()
 }
 
-// Int64Scan returns an int64 scanner.
-func Int64Scan(buf []byte) *Int64Scanner {
-	return &Int64Scanner{
-		buf: bytes.NewBuffer(buf),
-	}
-}
-
-// Int64Values encoded run.
-func Int64Values(buf []byte) (v []int64, err error) {
-	s := Int64Scan(buf)
+// DecodeInt64 encoded run.
+func DecodeInt64(buf []byte) (v []int64, err error) {
+	s := NewInt64Decoder(buf)
 
 	for s.Next() {
 		v = append(v, s.Value)
@@ -108,14 +108,14 @@ func Int64Values(buf []byte) (v []int64, err error) {
 	return v, s.Err()
 }
 
-// Int64Card returns a map of value cardinality.
-func Int64Card(buf []byte) (v map[int64]uint64, err error) {
-	s := Int64Scan(buf)
+// DecodeInt64Card returns a map of value cardinality.
+func DecodeInt64Card(buf []byte) (v map[int64]uint64, err error) {
+	d := NewInt64Decoder(buf)
 	v = make(map[int64]uint64)
 
-	for s.Next() {
-		v[s.Value]++
+	for d.Next() {
+		v[d.Value]++
 	}
 
-	return v, s.Err()
+	return v, d.Err()
 }
