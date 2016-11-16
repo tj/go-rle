@@ -34,7 +34,7 @@ func TestEncodeInt64(t *testing.T) {
 	}
 }
 
-func TestScanInt64(t *testing.T) {
+func TestDecodeInt64(t *testing.T) {
 	in := []int64{0, 0, 0, 0, 0, 3, 3, 4, 1, 1, 1}
 	out := []int64{}
 
@@ -48,7 +48,7 @@ func TestScanInt64(t *testing.T) {
 	assert.NoError(t, d.Err())
 }
 
-func TestStatsInt64(t *testing.T) {
+func TestDecodeInt64Card(t *testing.T) {
 	nums := []int64{1, 1, 1, 1, 1, 1, 0, 0, 0, 2}
 	b := rle.EncodeInt64(nums)
 	v, err := rle.DecodeInt64Card(b)
@@ -56,7 +56,7 @@ func TestStatsInt64(t *testing.T) {
 	assert.Equal(t, map[int64]uint64{1: 6, 0: 3, 2: 1}, v)
 }
 
-func BenchmarkInt64(b *testing.B) {
+func BenchmarkEncodeInt64(b *testing.B) {
 	nums100 := make([]int64, 100e3)
 	nums500 := make([]int64, 500e3)
 	nums1000 := make([]int64, 1e6)
@@ -83,7 +83,7 @@ func BenchmarkInt64(b *testing.B) {
 	})
 }
 
-func BenchmarkInt64Values(b *testing.B) {
+func BenchmarkDecodeInt64(b *testing.B) {
 	nums100 := rle.EncodeInt64(make([]int64, 100e3))
 	nums500 := rle.EncodeInt64(make([]int64, 500e3))
 	nums1000 := rle.EncodeInt64(make([]int64, 1e6))
@@ -110,7 +110,7 @@ func BenchmarkInt64Values(b *testing.B) {
 	})
 }
 
-func BenchmarkInt64Scan(b *testing.B) {
+func BenchmarkInt64Decoder(b *testing.B) {
 	nums100 := rle.EncodeInt64(make([]int64, 100e3))
 	nums500 := rle.EncodeInt64(make([]int64, 500e3))
 	nums1000 := rle.EncodeInt64(make([]int64, 1e6))
@@ -146,7 +146,7 @@ func BenchmarkInt64Scan(b *testing.B) {
 	})
 }
 
-func BenchmarkInt64Card(b *testing.B) {
+func BenchmarkDecodeInt64Card(b *testing.B) {
 	nums := []int64{1, 1, 1, 0, 0, 0, 0, 0, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2}
 	buf := rle.EncodeInt64(nums)
 	for i := 0; i < b.N; i++ {
